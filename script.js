@@ -130,7 +130,7 @@ function start() {
     update();
 }
 
-function refresh() {
+function refresh(canvasDiv) {
     drawScore();
     game.timerCurr = getTime() + getTimeLimit();
 
@@ -173,9 +173,15 @@ function refresh() {
             for (let i=0; i<choices.length; i+=1) {
                 const option = $$('option');
                 option.innerText = choices[i];
-                option.onclick = i==0
-                    ? correct
-                    : wrong;
+
+                if (canvasDiv) {
+                    option.className += i==0
+                        ? ' correct' : '';
+                } else {
+                    option.onclick = i==0
+                        ? correct
+                        : wrong;
+                }
                 options.push(option);
             }
 
@@ -197,7 +203,7 @@ function refresh() {
     }
     rows.push(shape2);
 
-    const canvas = $('game');
+    const canvas = canvasDiv || $('game');
     canvas.innerHTML = '';
 
     for (let i=0; i<rows.length; i+=1) {
@@ -224,4 +230,9 @@ function update() {
     } else {
         setTimeout(update, 1000/FPS);
     }
+}
+
+// NOTE: loading demo
+window.onload = function(){
+    refresh($('demo'));
 }
