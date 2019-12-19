@@ -41,20 +41,15 @@ function random() {
     return [1,2,3,4].sort(() => Math.random() - 0.5);
 }
 
-function pattern(n, state) {
+function pattern(n, sort=true) {
     const states = [];
 
-    if (!state) {
-        state = parseInt((n+1)/2);
-    }
-    for (let i=0; i<state; i++) {
+    for (let i=0; i<n-1; i++) {
         states.push(0);
     }
-    for (let i=0; i<n-state; i++) {
-        states.push(1);
-    }
+    states.push(1);
 
-    return states;
+    return sort ? states.sort(() => Math.random()>0.5) : states;
 }
 
 // === ALGO FUNCS ===
@@ -135,13 +130,17 @@ function start() {
     update();
 }
 
-function refresh(n=2) {
+function refresh() {
     drawScore();
     game.timerCurr = getTime() + getTimeLimit();
 
+    // NOTE: game difficulty level
+    const layerCnt = 2 + parseInt(Math.random() * game.rightCnt/5);
+    const toMix = game.rightCnt > 3;
+
     const init = random();
-    const arrs = setup(n);
-    const patt = pattern(n);
+    const arrs = setup(layerCnt);
+    const patt = pattern(layerCnt, toMix);
 
     const rows = [];
 
